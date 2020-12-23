@@ -1,0 +1,8 @@
+H:\NAM 4\DesignPattern\DoAn\Source\MyORM\MyORM\bin\Debug\netstandard2.0\MyORM.deps.json
+H:\NAM 4\DesignPattern\DoAn\Source\MyORM\MyORM\bin\Debug\netstandard2.0\MyORM.dll
+H:\NAM 4\DesignPattern\DoAn\Source\MyORM\MyORM\bin\Debug\netstandard2.0\MyORM.pdb
+H:\NAM 4\DesignPattern\DoAn\Source\MyORM\MyORM\obj\Debug\netstandard2.0\MyORM.csprojAssemblyReference.cache
+H:\NAM 4\DesignPattern\DoAn\Source\MyORM\MyORM\obj\Debug\netstandard2.0\MyORM.AssemblyInfoInputs.cache
+H:\NAM 4\DesignPattern\DoAn\Source\MyORM\MyORM\obj\Debug\netstandard2.0\MyORM.AssemblyInfo.cs
+H:\NAM 4\DesignPattern\DoAn\Source\MyORM\MyORM\obj\Debug\netstandard2.0\MyORM.dll
+H:\NAM 4\DesignPattern\DoAn\Source\MyORM\MyORM\obj\Debug\netstandard2.0\MyORM.pdb
