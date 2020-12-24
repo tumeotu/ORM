@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MyORM.Database
+namespace MyORM.ORMException
 {
-	class PostgreSQL
+	class DatabaseConfigMalformed
 	{
 	}
 }

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "H:\\NAM 4\\DesignPattern\\DoAn\\Source\\MyORM\\MyORM\\MyORM.csproj": {}
+    "H:\\NAM 4\\DesignPattern\\DoAn\\Git\\ORM\\MyORM\\MyORM\\MyORM.csproj": {}
   },
   "projects": {
-    "H:\\NAM 4\\DesignPattern\\DoAn\\Source\\MyORM\\MyORM\\MyORM.csproj": {
+    "H:\\NAM 4\\DesignPattern\\DoAn\\Git\\ORM\\MyORM\\MyORM\\MyORM.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "H:\\NAM 4\\DesignPattern\\DoAn\\Source\\MyORM\\MyORM\\MyORM.csproj",
+        "projectUniqueName": "H:\\NAM 4\\DesignPattern\\DoAn\\Git\\ORM\\MyORM\\MyORM\\MyORM.csproj",
         "projectName": "MyORM",
-        "projectPath": "H:\\NAM 4\\DesignPattern\\DoAn\\Source\\MyORM\\MyORM\\MyORM.csproj",
+        "projectPath": "H:\\NAM 4\\DesignPattern\\DoAn\\Git\\ORM\\MyORM\\MyORM\\MyORM.csproj",
         "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
-        "outputPath": "H:\\NAM 4\\DesignPattern\\DoAn\\Source\\MyORM\\MyORM\\obj\\",
+        "outputPath": "H:\\NAM 4\\DesignPattern\\DoAn\\Git\\ORM\\MyORM\\MyORM\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\",

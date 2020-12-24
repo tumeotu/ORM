@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "5UT65KWp3FUdhNxsrl6qM0L4gygMVA0RBsMgzntwb0yUhWNzNrckggTncElvxYDUGmNDIY7Dlg0+z+nEffr9+A==",
+  "dgSpecHash": "CnAfxu/SFZG634xjvldrDw9t8+tn0RDeQOfwiwHBV+3oVqcyIAPjMK44JeWzScD9Btn11mtwD/axCVs3dGjUxA==",
   "success": true,
-  "projectFilePath": "H:\\NAM 4\\DesignPattern\\DoAn\\Source\\MyORM\\MyORM\\MyORM.csproj",
+  "projectFilePath": "H:\\NAM 4\\DesignPattern\\DoAn\\Git\\ORM\\MyORM\\MyORM\\MyORM.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\USER\\.nuget\\packages\\bouncycastle.netcore\\1.8.3\\bouncycastle.netcore.1.8.3.nupkg.sha512",
     "C:\\Users\\USER\\.nuget\\packages\\google.protobuf\\3.11.4\\google.protobuf.3.11.4.nupkg.sha512",
