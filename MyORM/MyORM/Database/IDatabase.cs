@@ -16,6 +16,11 @@ namespace MyORM.Database
 		/// </summary>
 		/// <returns></returns>
 		bool Close();
+		/// <summary>
+		/// Creater instance of this type
+		/// </summary>
+		void Initlialize();
+
 
 		/// <summary>
 		/// 

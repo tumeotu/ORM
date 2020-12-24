@@ -20,6 +20,18 @@ namespace MyORM.Database
 			throw new NotImplementedException();
 		}
 
+		public void Initlialize()
+		{
+			try
+			{
+				this.connection = new SqlConnection(ConnectionString);
+			}
+			catch(Exception exception)
+			{
+				throw exception;
+			}
+		}
+
 		public bool Open()
 		{
 			throw new NotImplementedException();

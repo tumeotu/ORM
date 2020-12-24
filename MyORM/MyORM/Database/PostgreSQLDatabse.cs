@@ -1,4 +1,5 @@
-﻿using MySql.Data.MySqlClient;
+﻿using MyORM.ORMException;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -6,40 +7,56 @@ using System.Text;
 
 namespace MyORM.Database
 {
-	class MySQLDatabase : IDatabase
+	class PostgreSQLDatabse : IDatabase
 	{
+		#region Properties
 		private string ConnectionString;
 
-		private MySqlConnection Connection;
+		private NpgsqlConnection Connection;
 
-		private MySqlCommand Command;
+		private NpgsqlCommand Command;
 
+		#endregion
 
-		public MySQLDatabase(string connectionString)
+		#region Constructor
+
+		public PostgreSQLDatabase(string connectionString)
 		{
 			this.ConnectionString = connectionString;
 			this.Initlialize();
 		}
 
+		#endregion
+
+		#region Methods
 		public bool Close()
 		{
+			this.ThrowIfNull();
 			try
 			{
 				Connection.Close();
 				return true;
 			}
-			catch( Exception except)
+			catch (Exception except)
 			{
 				throw except;
 			}
-			
+
+		}
+
+		public void Dispose()
+		{
+			this.Connection?.Dispose();
+			this.Connection = null;
+			this.Command = null;
+			this.ConnectionString = "";
 		}
 
 		public void Initlialize()
 		{
 			try
 			{
-				this.Connection = new MySqlConnection(ConnectionString);
+				this.Connection = new NpgsqlConnection(ConnectionString);
 			}
 			catch (Exception exception)
 			{
@@ -49,6 +66,7 @@ namespace MyORM.Database
 
 		public bool Open()
 		{
+			this.ThrowIfNull();
 			try
 			{
 				Connection.Open();
@@ -64,12 +82,14 @@ namespace MyORM.Database
 		{
 			DataTable data = new DataTable();
 			Connection.Open();
-			MySqlDataAdapter da = new MySqlDataAdapter(Command);
+			NpgsqlDataAdapter da = new NpgsqlDataAdapter(Command);
 			da.Fill(data);
 			this.Close();
 			da.Dispose();
 			return data;
 		}
+
+		#endregion
 
 		#region Protected Methods
 
@@ -81,11 +101,10 @@ namespace MyORM.Database
 		{
 			if (this.Connection == null)
 			{
-				throw new OrmConnectorNotInitializedException();
+				throw new ConnectorNotInitializedException();
 			}
 		}
 
 		#endregion
-
 	}
 }
