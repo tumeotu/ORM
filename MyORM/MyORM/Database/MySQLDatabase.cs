@@ -1,4 +1,4 @@
-﻿using MySql.Data.MySqlClient;
+﻿/*using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -81,7 +81,7 @@ namespace MyORM.Database
 		{
 			if (this.Connection == null)
 			{
-				throw new OrmConnectorNotInitializedException();
+				//throw new OrmConnectorNotInitializedException();
 			}
 		}
 
@@ -89,3 +89,4 @@ namespace MyORM.Database
 
 	}
 }
+*/

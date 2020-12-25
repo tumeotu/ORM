@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -30,3 +30,4 @@ namespace MyORM.Database
 		object Read(string queryString);
 	}
 }
+*/

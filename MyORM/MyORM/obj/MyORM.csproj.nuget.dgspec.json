@@ -1,24 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "H:\\NAM 4\\DesignPattern\\DoAn\\Git\\ORM\\MyORM\\MyORM\\MyORM.csproj": {}
+    "D:\\HOCTAP\\Đại Học\\Học Kỳ VII\\Mẫu Thiết Kế Hướng Đối Tượng\\Dapper\\ORM\\MyORM\\MyORM\\MyORM.csproj": {}
   },
   "projects": {
-    "H:\\NAM 4\\DesignPattern\\DoAn\\Git\\ORM\\MyORM\\MyORM\\MyORM.csproj": {
+    "D:\\HOCTAP\\Đại Học\\Học Kỳ VII\\Mẫu Thiết Kế Hướng Đối Tượng\\Dapper\\ORM\\MyORM\\MyORM\\MyORM.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "H:\\NAM 4\\DesignPattern\\DoAn\\Git\\ORM\\MyORM\\MyORM\\MyORM.csproj",
+        "projectUniqueName": "D:\\HOCTAP\\Đại Học\\Học Kỳ VII\\Mẫu Thiết Kế Hướng Đối Tượng\\Dapper\\ORM\\MyORM\\MyORM\\MyORM.csproj",
         "projectName": "MyORM",
-        "projectPath": "H:\\NAM 4\\DesignPattern\\DoAn\\Git\\ORM\\MyORM\\MyORM\\MyORM.csproj",
-        "packagesPath": "C:\\Users\\USER\\.nuget\\packages\\",
-        "outputPath": "H:\\NAM 4\\DesignPattern\\DoAn\\Git\\ORM\\MyORM\\MyORM\\obj\\",
+        "projectPath": "D:\\HOCTAP\\Đại Học\\Học Kỳ VII\\Mẫu Thiết Kế Hướng Đối Tượng\\Dapper\\ORM\\MyORM\\MyORM\\MyORM.csproj",
+        "packagesPath": "C:\\Users\\DELL\\.nuget\\packages\\",
+        "outputPath": "D:\\HOCTAP\\Đại Học\\Học Kỳ VII\\Mẫu Thiết Kế Hướng Đối Tượng\\Dapper\\ORM\\MyORM\\MyORM\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet\\",
-          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
         ],
         "configFilePaths": [
-          "C:\\Users\\USER\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\DELL\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
@@ -31,6 +30,7 @@
         },
         "frameworks": {
           "netstandard2.0": {
+            "targetAlias": "netstandard2.0",
             "projectReferences": {}
           }
         },
@@ -42,6 +42,7 @@
       },
       "frameworks": {
         "netstandard2.0": {
+          "targetAlias": "netstandard2.0",
           "dependencies": {
             "MySql.Data": {
               "target": "Package",
@@ -56,10 +57,6 @@
             "Npgsql": {
               "target": "Package",
               "version": "[5.0.1.1, )"
-            },
-            "System.Data.SqlClient": {
-              "target": "Package",
-              "version": "[4.8.2, )"
             }
           },
           "imports": [
@@ -72,7 +69,7 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.300\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }
