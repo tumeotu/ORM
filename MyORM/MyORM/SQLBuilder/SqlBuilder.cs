@@ -9,8 +9,8 @@ namespace MyORM.SQLBuilder
 	{
         SqlBuilder<T> Where(Expression<Func<T, bool>> clause);
         SqlBuilder<T> AND(Expression<Func<T, bool>> clause);
+        SqlBuilder<T> OR(Expression<Func<T, bool>> clause);
         SqlBuilder<T> SelectAll();
-
         SqlBuilder<T> Update(T obj);
     }
 }

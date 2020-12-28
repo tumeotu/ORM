@@ -8,8 +8,8 @@ using MyORM.Extension;
 
 namespace MyORM.Database
 {
-	/*class SQLDatabase : IDatabase
-	{
+    class SQLDatabase : IDatabase
+    {
         #region Properties
         private string ConnectionString;
 
@@ -126,5 +126,5 @@ namespace MyORM.Database
             }
         }
         #endregion
-    }*/
+    }
 }
