@@ -76,6 +76,12 @@ namespace MyORM.Database
                 throw exception;
             }
         }
+
+        public void Initlialize()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Opens the connection to a database.
         /// </summary>
@@ -99,7 +105,7 @@ namespace MyORM.Database
         /// </summary>
         /// <param name="queryString">string of query into database</param>
         /// <returns> DataTable of results </returns>
-        public object Read(string queryString)
+        public DataTable Read(string queryString)
         {
             DataTable data = new DataTable();
             Connection.Open();

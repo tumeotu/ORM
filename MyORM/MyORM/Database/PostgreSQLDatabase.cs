@@ -7,7 +7,7 @@ using System.Text;
 
 namespace MyORM.Database
 {
-    class PostgreSQLDatabse : IDatabase
+    class PostgreSQLDatabase : IDatabase
     {
         #region Properties
         private string ConnectionString;
@@ -78,7 +78,7 @@ namespace MyORM.Database
             }
         }
 
-        public object Read(string queryString)
+        public DataTable Read(string queryString)
         {
             DataTable data = new DataTable();
             Connection.Open();

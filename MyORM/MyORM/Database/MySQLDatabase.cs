@@ -60,7 +60,7 @@ namespace MyORM.Database
             }
         }
 
-        public object Read(string queryString)
+        public DataTable Read(string queryString)
         {
             DataTable data = new DataTable();
             Connection.Open();

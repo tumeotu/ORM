@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 
 namespace MyORM.Database
@@ -27,6 +28,6 @@ namespace MyORM.Database
         /// </summary>
         /// <param name="queryString">string of query into database</param>
         /// <returns> DataTable of results </returns>
-        object Read(string queryString);
+        DataTable Read(string queryString);
     }
 }
