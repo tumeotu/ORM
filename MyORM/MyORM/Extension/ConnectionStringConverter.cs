@@ -1,5 +1,4 @@
 ﻿using MyORM.ORMException;
-using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -63,7 +62,6 @@ namespace MyORM.Extension
 				connection.Append(string.Format("Database={0};", connectionString["Database"]));
 				connection.Append(string.Format("User Id={0};", connectionString["UserID"]));
 				connection.Append(string.Format("Password={0};", connectionString["Password"]));
-				return connection.ToString();
 				return connection.ToString();
 			}
 		}

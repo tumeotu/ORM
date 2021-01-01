@@ -7,9 +7,8 @@ namespace MyORM.Database
 	public interface IDatabase
 	{
 		/// <summary>
-		/// Open connection to database
+		/// Opens the connection to a database.
 		/// </summary>
-		/// <returns></returns>
 		bool Open();
 		/// <summary>
 		/// Close connection to database
@@ -17,16 +16,22 @@ namespace MyORM.Database
 		/// <returns></returns>
 		bool Close();
 		/// <summary>
-		/// Creater instance of this type
+		/// Initializes the connection against the database.
 		/// </summary>
-		void Initlialize();
+		/// <param name="connectionString">A connection string containing information to connect to a given database.</param>
+		void Initlialize(string connectionString);
 
 
 		/// <summary>
-		/// 
+		/// Read data from database
 		/// </summary>
 		/// <param name="queryString">string of query into database</param>
 		/// <returns> DataTable of results </returns>
 		object Read(string queryString);
+
+		/// <summary>
+		/// release object connection
+		/// </summary>
+		void Dispose();
 	}
 }

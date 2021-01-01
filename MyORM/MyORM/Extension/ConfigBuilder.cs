@@ -6,34 +6,40 @@ namespace MyORM.Extension
 {
 	public class ConfigBuilder : IConfig
 	{
-		public string Build()
+		private Dictionary<string, string> ConnectionString = new Dictionary<string, string>();
+		public Dictionary<string, string> Build()
 		{
-			throw new NotImplementedException();
+			return ConnectionString;
 		}
 
 		public IConfig SetDatabase(string databaseName)
 		{
-			return null;
+			ConnectionString.Add("Database", databaseName);
+			return this;
 		}
 
 		public IConfig SetPassword(string password)
 		{
-			throw new NotImplementedException();
+			ConnectionString.Add("Password", password);
+			return this;
 		}
 
 		public IConfig SetPort(int port)
 		{
-			throw new NotImplementedException();
+			ConnectionString.Add("Port", port.ToString());
+			return this;
 		}
 
 		public IConfig SetServer(string serverName)
 		{
-			throw new NotImplementedException();
+			ConnectionString.Add("Server", serverName);
+			return this;
 		}
 
 		public IConfig SetUserId(string userIDName)
 		{
-			throw new NotImplementedException();
+			ConnectionString.Add("UserID", userIDName);
+			return this;
 		}
 	}
 }

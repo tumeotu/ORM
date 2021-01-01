@@ -1,4 +1,5 @@
-﻿using MyORM.ORMException;
+﻿using MyORM.Extension;
+using MyORM.ORMException;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Text;
 
 namespace MyORM.Database
 {
-	class PostgreSQLDatabse : IDatabase
+	class PostgreSQLDatabase : IDatabase
 	{
 		#region Properties
 		private string ConnectionString;
@@ -19,16 +20,23 @@ namespace MyORM.Database
 		#endregion
 
 		#region Constructor
-
-		public PostgreSQLDatabase(string connectionString)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PostgreSQLDatabase"/> class.
+		/// </summary>
+		/// <param name="connectionString">connectionString to connect to datase, that user wanna/param>
+		public PostgreSQLDatabase(Dictionary<string, string> connectionString)
 		{
-			this.ConnectionString = connectionString;
-			this.Initlialize();
+			this.ConnectionString = ConnectionStringConverter.ConvertToPostgreSQL(connectionString);
+			this.Initlialize(this.ConnectionString);
 		}
 
 		#endregion
 
 		#region Methods
+
+		/// <summary>
+		/// Close connection to database
+		/// </summary>
 		public bool Close()
 		{
 			this.ThrowIfNull();
@@ -44,6 +52,9 @@ namespace MyORM.Database
 
 		}
 
+		/// <summary>
+		/// release object connection
+		/// </summary>
 		public void Dispose()
 		{
 			this.Connection?.Dispose();
@@ -51,8 +62,10 @@ namespace MyORM.Database
 			this.Command = null;
 			this.ConnectionString = "";
 		}
-
-		public void Initlialize()
+		/// <summary>
+		/// Initializes the connection against the database.
+		/// </summary>
+		public void Initlialize(string ConnectionString)
 		{
 			try
 			{
@@ -63,7 +76,9 @@ namespace MyORM.Database
 				throw exception;
 			}
 		}
-
+		/// <summary>
+		/// Opens the connection to a database.
+		/// </summary>
 		public bool Open()
 		{
 			this.ThrowIfNull();
@@ -78,6 +93,12 @@ namespace MyORM.Database
 			}
 		}
 
+
+		/// <summary>
+		/// Read data from database
+		/// </summary>
+		/// <param name="queryString">string of query into database</param>
+		/// <returns> DataTable of results </returns>
 		public object Read(string queryString)
 		{
 			DataTable data = new DataTable();
@@ -96,7 +117,7 @@ namespace MyORM.Database
 		/// <summary>
 		/// Throws if the connection is null.
 		/// </summary>
-		/// <exception cref="System.Exception">MySql Connection is not initialized.</exception>
+		/// <exception cref="System.Exception">PostgreSQL Connection is not initialized.</exception>
 		private void ThrowIfNull()
 		{
 			if (this.Connection == null)
@@ -104,7 +125,6 @@ namespace MyORM.Database
 				throw new ConnectorNotInitializedException();
 			}
 		}
-
 		#endregion
 	}
 }
