@@ -8,17 +8,24 @@ using System.Text;
 
 namespace MyORM.Database
 {
+<<<<<<< HEAD
 	class MySQLDatabase : IDatabase
 	{
 		#region Properties
 		private string ConnectionString;
+=======
+    class MySQLDatabase : IDatabase
+    {
+        private string ConnectionString;
+>>>>>>> 85a5d410dd4aa06ecf6f396d75d5c85cac5d3d68
 
-		private MySqlConnection Connection;
+        private MySqlConnection Connection;
 
-		private MySqlCommand Command;
+        private MySqlCommand Command;
 
 		#endregion
 
+<<<<<<< HEAD
 		#region Constructor
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PostgreSQLDatabase"/> class.
@@ -127,4 +134,79 @@ namespace MyORM.Database
 		}
 		#endregion
 	}
+=======
+        public MySQLDatabase(string connectionString)
+        {
+            this.ConnectionString = connectionString;
+            this.Initlialize();
+        }
+
+        public bool Close()
+        {
+            try
+            {
+                Connection.Close();
+                return true;
+            }
+            catch (Exception except)
+            {
+                throw except;
+            }
+
+        }
+
+        public void Initlialize()
+        {
+            try
+            {
+                this.Connection = new MySqlConnection(ConnectionString);
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+        }
+
+        public bool Open()
+        {
+            try
+            {
+                Connection.Open();
+                return true;
+            }
+            catch (Exception except)
+            {
+                throw except;
+            }
+        }
+
+        public object Read(string queryString)
+        {
+            DataTable data = new DataTable();
+            Connection.Open();
+            MySqlDataAdapter da = new MySqlDataAdapter(Command);
+            da.Fill(data);
+            this.Close();
+            da.Dispose();
+            return data;
+        }
+
+        #region Protected Methods
+
+        /// <summary>
+        /// Throws if the connection is null.
+        /// </summary>
+        /// <exception cref="System.Exception">MySql Connection is not initialized.</exception>
+        private void ThrowIfNull()
+        {
+            if (this.Connection == null)
+            {
+                //throw new OrmConnectorNotInitializedException();
+            }
+        }
+
+        #endregion
+
+    }
+>>>>>>> 85a5d410dd4aa06ecf6f396d75d5c85cac5d3d68
 }

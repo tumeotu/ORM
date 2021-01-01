@@ -4,6 +4,7 @@ using System.Text;
 
 namespace MyORM.Database
 {
+<<<<<<< HEAD
 	public interface IDatabase
 	{
 		/// <summary>
@@ -34,4 +35,31 @@ namespace MyORM.Database
 		/// </summary>
 		void Dispose();
 	}
+=======
+    public interface IDatabase
+    {
+        /// <summary>
+        /// Open connection to database
+        /// </summary>
+        /// <returns></returns>
+        bool Open();
+        /// <summary>
+        /// Close connection to database
+        /// </summary>
+        /// <returns></returns>
+        bool Close();
+        /// <summary>
+        /// Creater instance of this type
+        /// </summary>
+        void Initlialize();
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="queryString">string of query into database</param>
+        /// <returns> DataTable of results </returns>
+        object Read(string queryString);
+    }
+>>>>>>> 85a5d410dd4aa06ecf6f396d75d5c85cac5d3d68
 }
