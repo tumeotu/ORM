@@ -24,7 +24,7 @@ namespace MyORM.SQLBuilder
                 valueString += "(" + getValue(arr[i]) + "),";
             }
             valueString += "(" + getValue(arr[arr.Length - 1]) + ")";
-            return this.sql = "Inser Into " + DBMapper.getTablename<T>() + "(" + getColumnName<T>() + ") Values " + valueString +";";
+            return this.sql = "Inser Into " + DBMapper.getTablename<T>() + "(" + getColumnName<T>() + ") Values " + valueString + ";";
         }
 
         public SqlBuilder<T> AND(Expression<Func<T, bool>> clause)
@@ -41,13 +41,13 @@ namespace MyORM.SQLBuilder
 
         public SqlBuilder<T> SelectAll()
         {
-            this.sql = "SELECT * FROM " + DBMapper.getTablename<T>()+";";
+            this.sql = "SELECT * FROM " + DBMapper.getTablename<T>() + ";";
             return this;
         }
 
         public SqlBuilder<T> Update(T obj)
         {
-            this.sql = "UPDATE " +DBMapper.getTablename<T>() + " SET ";
+            this.sql = "UPDATE " + DBMapper.getTablename<T>() + " SET ";
 
             string setString = "";
             foreach (PropertyInfo prop in obj.GetType().GetProperties())
@@ -100,7 +100,7 @@ namespace MyORM.SQLBuilder
             }
             string right = String.Join(" ", subs, 2, subs.Length - 1 - 1);
 
-            return DBMapper.getColumName<T>(left) + midle + right +";";
+            return DBMapper.getColumName<T>(left) + midle + right + ";";
         }
 
         private string getColumnName<T1>()

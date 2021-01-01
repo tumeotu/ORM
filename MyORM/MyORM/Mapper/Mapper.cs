@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MyORM.Mapper
 {
-	class Mapper
-	{
-	}
+    class Mapper
+    {
+    }
 }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MyORM.ORMException
 {
-	class DatabaseConfigMalformed
-	{
-	}
+    class DatabaseConfigMalformed
+    {
+    }
 }
