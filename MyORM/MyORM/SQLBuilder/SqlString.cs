@@ -14,7 +14,7 @@ namespace MyORM.SQLBuilder
 
         public void save(object ob)
         {
-            this.sql = "Inser Into " + DBMapper.getTablename<T>() + "(" + getColumnName<T>() + ") Values (" + getValue(ob) + ");";
+            this.sql = "Inser Into " + DBMapper.getTablename<T>() + "(" + getColumnName<T>() + ") Values (" + getValue(ob) + ")";
         }
         public string save(T[] arr)
         {
@@ -29,19 +29,19 @@ namespace MyORM.SQLBuilder
 
         public SqlBuilder<T> AND(Expression<Func<T, bool>> clause)
         {
-            this.sql += " AND " + parseClause(clause.Body.ToString());
+            this.sql += String.Format(" AND ({0})", parseClause(clause.Body));
             return this;
         }
 
         public SqlBuilder<T> OR(Expression<Func<T, bool>> clause)
         {
-            this.sql += " OR " + parseClause(clause.Body.ToString());
+            this.sql += String.Format(" OR ({0})", parseClause(clause.Body));
             return this;
         }
 
         public SqlBuilder<T> SelectAll()
         {
-            this.sql = "SELECT * FROM " + DBMapper.getTablename<T>()+";";
+            this.sql = "SELECT * FROM " + DBMapper.getTablename<T>();
             return this;
         }
 
@@ -73,34 +73,100 @@ namespace MyORM.SQLBuilder
 
         public SqlBuilder<T> Where(Expression<Func<T, bool>> clause)
         {
-            this.sql += " WHERE " + parseClause(clause.Body.ToString());
+            this.sql += String.Format(" WHERE ({0})", parseClause(clause.Body));
             return this;
         }
-        private static string parseClause(String clause)
+        private static string parseClause(Expression expr)
         {
-            char[] separators = new char[] { '(', ')', ' ', };
-            string[] subs = clause.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            BinaryExpression be = expr as BinaryExpression;
 
-            string left = (subs[0].Split('.', (char)StringSplitOptions.RemoveEmptyEntries))[1];
-            string midle = subs[1];
-            switch (midle)
+            string ope = checkedExpess(be);
+            if (ope != null)
             {
-                case "==":
-                    Type myType = typeof(T);
-                    PropertyInfo myPropInfo = myType.GetProperty(left);
+                return String.Format("{0} {1} {2}", parseClause(be.Left), ope, parseClause(be.Right));
+            }
+            return convertToString(be);
+        }
+        private static string checkedExpess(BinaryExpression be)
+        {
+            switch (be.NodeType)
+            {
+                case ExpressionType.AndAlso:
+                    return "AND";
+                case ExpressionType.OrElse:
+                    return "OR";
+            }
+            return null;
+        }
+
+        private static string convertToString(Expression exp)
+        {
+            BinaryExpression be = exp as BinaryExpression;
+            Expression left = be.Left;
+            Expression right = be.Right;
+            object rightValue = null;
+            string oprearator = "";
+            if (right is MemberExpression)
+            {
+                MemberExpression member = (MemberExpression)right;
+
+                if (member.Expression is MemberExpression) // right là một property trong object
+                {
+                    MemberExpression captureToProduct = (MemberExpression)member.Expression;
+                    ConstantExpression captureConst = (ConstantExpression)captureToProduct.Expression;
+                    object obj = ((FieldInfo)captureToProduct.Member).GetValue(captureConst.Value);
+                    rightValue = ((PropertyInfo)member.Member).GetValue(obj, null);
+                }
+                else if (member.Expression is ConstantExpression) // right là một biến
+                {
+                    ConstantExpression captureConst = (ConstantExpression)member.Expression;
+                    rightValue = ((FieldInfo)member.Member).GetValue(captureConst.Value);
+                }
+            }
+            else // right là một biến hằng
+            {
+                rightValue = right;
+
+            }
+            //Expression left = eq.Left;
+            string leftValue = left.ToString().Split('.')[1];
+            Type myType = typeof(T);
+            PropertyInfo myPropInfo = myType.GetProperty(leftValue);
+            switch (be.NodeType)
+            {
+                case ExpressionType.Equal:
+
                     if (myPropInfo.PropertyType == typeof(string))
                     {
-                        midle = " LIKE ";
+                        oprearator = " LIKE ";
+                        rightValue = String.Format("{0}", rightValue);
+                    }
+                    else oprearator = "=";
+                    break;
+                case ExpressionType.NotEqual:
+
+                    if (myPropInfo.PropertyType == typeof(string))
+                    {
+                        oprearator = "NOT LIKE ";
+                        rightValue = String.Format("{0}", rightValue);
                     }
                     else
-                    {
-                        midle = "=";
-                    }
+                        oprearator = "<>";
+                    break;
+                case ExpressionType.GreaterThan:
+                    oprearator = ">";
+                    break;
+                case ExpressionType.GreaterThanOrEqual:
+                    oprearator = ">=";
+                    break;
+                case ExpressionType.LessThan:
+                    oprearator = "<";
+                    break;
+                case ExpressionType.LessThanOrEqual:
+                    oprearator = "<=";
                     break;
             }
-            string right = String.Join(" ", subs, 2, subs.Length - 1 - 1);
-
-            return DBMapper.getColumName<T>(left) + midle + right +";";
+            return String.Format("{0} {1} {2}", DBMapper.getColumName<T>(leftValue), oprearator, rightValue);
         }
 
         private string getColumnName<T1>()
