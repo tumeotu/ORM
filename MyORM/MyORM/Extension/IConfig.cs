@@ -11,7 +11,6 @@ namespace MyORM.Extension
 		IConfig SetUserId(string userIDName);
 		IConfig SetPort(int port);
 		IConfig SetPassword(string password);
-
-		string Build();
+		Dictionary<string, string> Build();
 	}
 }

@@ -169,6 +169,54 @@ namespace MyORM.SQLBuilder
             return String.Format("{0} {1} {2}", DBMapper.getColumName<T>(leftValue), oprearator, rightValue);
         }
 
+        public SqlBuilder<T> GroupBy(Expression<Func<T, object>> clause)
+        {
+            this.sql += " GROUP BY " + parseClauseGroupBy(clause.Body.ToString());
+            return this;
+        }
+        public SqlBuilder<T> GroupBy(Expression<Func<T, object>> clause1, Expression<Func<T, object>> clause2)
+        {
+            this.sql += " GROUP BY " + parseClauseGroupBy(clause1.Body.ToString()) + "," + parseClauseGroupBy(clause2.Body.ToString());
+            return this;
+        }
+
+        private static string parseClauseGroupBy(String clause)
+        {
+            if (clause.Contains("Convert"))
+                clause = clause.Replace("Convert", "");
+            char[] separators = new char[] { '(', ')', ' ', };
+            string[] subs = clause.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            string left = (subs[0].Split('.', (char)StringSplitOptions.RemoveEmptyEntries))[1];
+            return DBMapper.getColumName<T>(left);
+        }
+
+        public SqlBuilder<T> Having<TKey>(Expression<Func<IGroup<TKey, T>, bool>> clause)
+        {
+            string data = clause.Body.ToString();
+            return this;
+        }
+
+        private static string parseClauseHaving(String clause)
+        {
+            if (clause.Contains("Convert"))
+                clause = clause.Replace("Convert", "");
+            char[] separators = new char[] { '(', ')', ' ', };
+            string[] subs = clause.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            string left = (subs[0].Split('.', (char)StringSplitOptions.RemoveEmptyEntries))[1];
+            return DBMapper.getColumName<T>(left);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
         private string getColumnName<T1>()
         {
             string columnNameString = "";
