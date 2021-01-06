@@ -25,9 +25,9 @@ namespace MyORM.Database
 		/// Initializes a new instance of the <see cref="PostgreSQLDatabase"/> class.
 		/// </summary>
 		/// <param name="connectionString">connectionString to connect to datase, that user wanna/param>
-		public MySQLDatabase(Dictionary<string, string> connectionString)
+		public MySQLDatabase(string connectionString)
 		{
-			this.ConnectionString = ConnectionStringConverter.ConvertToMySQL(connectionString);
+			this.ConnectionString = connectionString;
 			this.Initlialize(this.ConnectionString);
 		}
 

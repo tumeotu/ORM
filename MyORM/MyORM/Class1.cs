@@ -1,12 +1,14 @@
-﻿using MyORM.SQLBuilder;
+﻿using MyORM.Extension;
+using MyORM.SQLBuilder;
 using System;
 
-namespace MyORM
+namespace abc
 {
 	public class Class1
 	{
         static void main(string[] args)
         {
+
             SinhVien sinhVien = new SinhVien();
             sinhVien.name = "sdsd";
             sinhVien.DTB = 305;
