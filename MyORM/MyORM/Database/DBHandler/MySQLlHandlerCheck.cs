@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MyORM.Extension;
+using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,15 +8,25 @@ namespace MyORM.Database.DBHandler
 {
     class MySQLHandlerCheck : AbstractHandlerCheckDB
     {
-        public override object Handle(object request)
+        /// <summary>
+        /// Check config is true or not
+        /// </summary>
+        /// <param name="config"></param>
+        /// <returns>MySQLDatabase if config is true for mysql</returns>
+        public override IDatabase Handle(Dictionary<string, string> config)
         {
-            if (request.ToString() == "mysql")
+            try
             {
-                return $"mysql: I'll eat the {request.ToString()}.\n";
+                string connectionString = ConnectionStringConverter.ConvertToMySQL(config);
+                MySqlConnection connection = new MySqlConnection(connectionString);
+                connection.Open();
+                connection.Close();
+                connection.Dispose();
+                return new MySQLDatabase(connectionString);
             }
-            else
+            catch(Exception e)
             {
-                return base.Handle(request);
+                return base.Handle(config);
             }
         }
     }
