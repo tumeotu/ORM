@@ -192,29 +192,90 @@ namespace MyORM.SQLBuilder
 
         public SqlBuilder<T> Having<TKey>(Expression<Func<IGroup<TKey, T>, bool>> clause)
         {
-            string data = clause.Body.ToString();
+            this.sql += String.Format(" Having ({0})", parseClauseHaving(clause.Body));
             return this;
         }
 
-        private static string parseClauseHaving(String clause)
+        private static string parseClauseHaving(Expression expr)
         {
-            if (clause.Contains("Convert"))
-                clause = clause.Replace("Convert", "");
-            char[] separators = new char[] { '(', ')', ' ', };
-            string[] subs = clause.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-            string left = (subs[0].Split('.', (char)StringSplitOptions.RemoveEmptyEntries))[1];
-            return DBMapper.getColumName<T>(left);
+            BinaryExpression be = expr as BinaryExpression;
+            string ope = checkedExpess(be);
+            if (ope != null)
+            {
+                return String.Format("{0} {1} {2}", parseClauseHaving(be.Left), ope, parseClauseHaving(be.Right));
+            }
+            return convertToString(be);
         }
 
+        private static string convertToStringHaving(Expression exp)
+        {
+            BinaryExpression be = exp as BinaryExpression;
+            Expression left = be.Left;
+            Expression right = be.Right;
+            object rightValue = null;
+            string oprearator = "";
+            if (right is MemberExpression)
+            {
+                MemberExpression member = (MemberExpression)right;
 
+                if (member.Expression is MemberExpression) // right là một property trong object
+                {
+                    MemberExpression captureToProduct = (MemberExpression)member.Expression;
+                    ConstantExpression captureConst = (ConstantExpression)captureToProduct.Expression;
+                    object obj = ((FieldInfo)captureToProduct.Member).GetValue(captureConst.Value);
+                    rightValue = ((PropertyInfo)member.Member).GetValue(obj, null);
+                }
+                else if (member.Expression is ConstantExpression) // right là một biến
+                {
+                    ConstantExpression captureConst = (ConstantExpression)member.Expression;
+                    rightValue = ((FieldInfo)member.Member).GetValue(captureConst.Value);
+                }
+            }
+            else // right là một biến hằng
+            {
+                rightValue = right;
 
+            }
+            //Expression left = eq.Left;
+            string leftValue = left.ToString().Split('.')[1];
+            Type myType = typeof(T);
+            PropertyInfo myPropInfo = myType.GetProperty(leftValue);
+            switch (be.NodeType)
+            {
+                case ExpressionType.Equal:
 
+                    if (myPropInfo.PropertyType == typeof(string))
+                    {
+                        oprearator = " LIKE ";
+                        rightValue = String.Format("{0}", rightValue);
+                    }
+                    else oprearator = "=";
+                    break;
+                case ExpressionType.NotEqual:
 
-
-
-
-
-
+                    if (myPropInfo.PropertyType == typeof(string))
+                    {
+                        oprearator = "NOT LIKE ";
+                        rightValue = String.Format("{0}", rightValue);
+                    }
+                    else
+                        oprearator = "<>";
+                    break;
+                case ExpressionType.GreaterThan:
+                    oprearator = ">";
+                    break;
+                case ExpressionType.GreaterThanOrEqual:
+                    oprearator = ">=";
+                    break;
+                case ExpressionType.LessThan:
+                    oprearator = "<";
+                    break;
+                case ExpressionType.LessThanOrEqual:
+                    oprearator = "<=";
+                    break;
+            }
+            return String.Format("{0} {1} {2}", DBMapper.getColumName<T>(leftValue), oprearator, rightValue);
+        }
 
 
         private string getColumnName<T1>()

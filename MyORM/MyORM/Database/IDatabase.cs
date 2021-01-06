@@ -21,7 +21,6 @@ namespace MyORM.Database
 		/// <param name="connectionString">A connection string containing information to connect to a given database.</param>
 		void Initlialize(string connectionString);
 
-
 		/// <summary>
 		/// Read data from database
 		/// </summary>

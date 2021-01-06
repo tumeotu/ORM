@@ -94,8 +94,6 @@ namespace MyORM.Extension
 			ConnectionString.Add("UserID", userIDName);
 			return this;
 		}
-
-
 		#endregion
 	}
 }
