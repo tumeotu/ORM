@@ -14,7 +14,7 @@ namespace MyORM.Mapper
 
         public void set(string propertyName, object targetValue)
         {
-            PropertyInfo prop = core.GetType().GetProperty("Name", BindingFlags.Public | BindingFlags.Instance);
+            PropertyInfo prop = core.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
             if (null != prop && prop.CanWrite)
             {
                 prop.SetValue(core, targetValue, null);

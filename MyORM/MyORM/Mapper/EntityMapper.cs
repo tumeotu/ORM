@@ -20,7 +20,7 @@ namespace MyORM.Mapper
             foreach (object attribute in attributesOfClass)
             {
                 TableAttribute tableAttribute = attribute as TableAttribute;
-                if (tableAttribute == null)
+                if (tableAttribute != null)
                 {
                     this.TableName = tableAttribute.TableName;
                 }
@@ -68,7 +68,7 @@ namespace MyORM.Mapper
                 this.databaseToEntity.Add(columnOfTable, propOfEntity);
                 this.entityToDatabase.Add(propOfEntity, columnOfTable);
                 // TODO: add rule
-                this.rules.Add(new PropertyMappingRule(propOfEntity, columnOfTable, MappingEngine.GetEngineFromName(MappingEngineType.TableField));
+                this.rules.Add(new PropertyMappingRule(propOfEntity, columnOfTable, MappingEngine.GetEngineFromName(MappingEngineType.TableField)));
             }
         }
 
