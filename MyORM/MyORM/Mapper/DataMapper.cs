@@ -25,8 +25,9 @@ namespace MyORM.Mapper
         public List<T> loadAll<T>(DataTable dataTable) where T : class, new()
         {
             List<T> result = new List<T>();
-            EntityMapper entityMapper = null;
-            if (GetMapper(typeof(T), entityMapper))
+            //EntityMapper entityMapper = null;
+            EntityMapper entityMapper = entities[typeof(T)];
+            if (!GetMapper(typeof(T), entityMapper))
             {
                 return result;
             }
