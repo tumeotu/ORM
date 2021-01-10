@@ -8,7 +8,7 @@ namespace MyORM.Mapper.MapperAttribute
     public class ColumnAttribute : Attribute
     {
         public string ColumnName;
-        private ColumnAttribute(string columnName)
+        public ColumnAttribute(string columnName)
         {
             this.ColumnName = columnName;
         }
