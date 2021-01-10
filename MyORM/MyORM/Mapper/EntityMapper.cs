@@ -10,16 +10,30 @@ namespace MyORM.Mapper
         private string TableName;
         private Dictionary<string, string> fieldToProperty = new Dictionary<string, string>();
         private Dictionary<string, string> propertyToField = new Dictionary<string, string>();
-        private Type type;
-
+        private HashSet<KeyValuePair<string, string>> primaryKeys = new HashSet<KeyValuePair<string, string>>();
+        private List<PropertyMappingRule> rules = new List<PropertyMappingRule>();
         public EntityMapper(Type type)
         {
-            this.type = type;
+            // TODO: add prop - field and field - prop dictionary
+            // TODO: add primary key
+            // TODO: add rule
         }
 
-        public object map(DataRow record)
+        public T map<T>(DataRow record, string resultAlias = null) where T : class, new()
         {
-            throw new NotImplementedException();
+            T result = new T();
+            if (resultAlias == null)
+            {
+                resultAlias = this.TableName;
+            }
+            foreach (var rule in rules)
+            {
+                if (rule.CanMap<T>(record))
+                {
+                    rule.ExecuteMap<T>(record, result, resultAlias);
+                }
+            }
+            return result;
         }
 
         public string GetTableName()
@@ -27,14 +41,15 @@ namespace MyORM.Mapper
             return TableName;
         }
 
-        internal string GetColumnName(string entityPropertyName)
+        public string GetColumnName(string entityPropertyName)
         {
-            throw new NotImplementedException();
+            return this.propertyToField[entityPropertyName];
         }
 
-        internal bool IsPrimaryKey(string properyName)
+        public bool IsPrimaryKey(string propertyName)
         {
-            throw new NotImplementedException();
+            return this.primaryKeys.Contains(new KeyValuePair<string, string>(propertyName, this.propertyToField[propertyName]));
         }
+
     }
 }
