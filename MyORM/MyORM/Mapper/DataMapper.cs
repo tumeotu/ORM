@@ -22,7 +22,7 @@ namespace MyORM.Mapper
                 entities.Add(type, new EntityMapper(type));
             }
         }
-        public List<T> loadAll<T>(DataTable dataTable)
+        public List<T> loadAll<T>(DataTable dataTable) where T : class, new()
         {
             List<T> result = new List<T>();
             EntityMapper entityMapper = null;
@@ -33,7 +33,7 @@ namespace MyORM.Mapper
 
             foreach (DataRow record in dataTable.Rows)
             {
-                T entity = (T)entityMapper.map(record);
+                T entity = entityMapper.map<T>(record);
                 if (entity != null)
                 {
                     result.Add(entity);
@@ -42,21 +42,13 @@ namespace MyORM.Mapper
             return result;
         }
 
-        public T loadOne<T>(DataTable dataTable)
+        public T loadOne<T>(DataTable dataTable) where T : class, new()
         {
+            // TODO
             throw new NotImplementedException();
         }
 
-        public bool GetMapper(Type type, EntityMapper entityMapper)
-        {
-            if (!entities.TryGetValue(type, out entityMapper))
-            {
-                return false;
-            }
-            return true;
-        }
-
-        public string GetColumName<T>(string entityPropertyName)
+        public string GetColumName<T>(string entityPropertyName) where T : class, new()
         {
             EntityMapper entityMapper = null;
             if (!GetMapper(typeof(T), entityMapper))
@@ -66,7 +58,7 @@ namespace MyORM.Mapper
             return entityMapper.GetColumnName(entityPropertyName);
         }
 
-        public string GetTablename<T>()
+        public string GetTablename<T>() where T : class, new()
         {
             EntityMapper entityMapper = null;
             if (!GetMapper(typeof(T), entityMapper))
@@ -76,7 +68,7 @@ namespace MyORM.Mapper
             return entityMapper.GetTableName();
         }
 
-        public bool IsPrimaryKey<T>(string properyName)
+        public bool IsPrimaryKey<T>(string properyName) where T : class, new()
         {
             EntityMapper entityMapper = null;
             if (GetMapper(typeof(T), entityMapper))
@@ -84,6 +76,14 @@ namespace MyORM.Mapper
                 return (entityMapper.IsPrimaryKey(properyName));
             }
             return false;
+        }
+        public bool GetMapper(Type type, EntityMapper entityMapper)
+        {
+            if (!entities.TryGetValue(type, out entityMapper))
+            {
+                return false;
+            }
+            return true;
         }
     }
 }

@@ -7,12 +7,12 @@ namespace MyORM.Mapper
 {
     interface IDataMapper
     {
-        List<T> loadAll<T>(DataTable dataTable);
-        T loadOne<T>(DataTable dataTable);
+        List<T> loadAll<T>(DataTable dataTable) where T : class, new();
+        T loadOne<T>(DataTable dataTable) where T : class, new();
 
-        string GetColumName<T>(string propertyName);
-        string GetTablename<T>();
+        string GetColumName<T>(string propertyName) where T : class, new();
+        string GetTablename<T>() where T : class, new();
 
-        bool IsPrimaryKey<T>(string properyName);
+        bool IsPrimaryKey<T>(string properyName) where T : class, new();
     }
 }
