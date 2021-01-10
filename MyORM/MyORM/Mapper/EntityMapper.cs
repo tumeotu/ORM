@@ -15,6 +15,17 @@ namespace MyORM.Mapper
         private List<PropertyMappingRule> rules = new List<PropertyMappingRule>();
         public EntityMapper(Type type)
         {
+            var attributesOfClass = type.GetCustomAttributes(false);
+
+            foreach (object attribute in attributesOfClass)
+            {
+                TableAttribute tableAttribute = attribute as TableAttribute;
+                if (tableAttribute == null)
+                {
+                    this.TableName = tableAttribute.TableName;
+                }
+            }
+
             foreach (var property in type.GetProperties())
             {
                 // TODO: add prop - field and field - prop dictionary
