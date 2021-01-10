@@ -6,7 +6,7 @@ namespace MyORM.Mapper
 {
     public abstract class MappingEngine
     {
-        public abstract void Execute<T>(DataRow record, T result, string propertyName, HashSet<string> fieldsName, string resultAlias) where T : class, new();
+        public abstract void Execute<T>(DataRow record, T result, string propertyName, string columnName, string resultAlias) where T : class, new();
 
         private static Dictionary<MappingEngineType, MappingEngine> engines = new Dictionary<MappingEngineType, MappingEngine>();
         static MappingEngine()
