@@ -1,4 +1,5 @@
-﻿using MyORM.ORMException;
+﻿using MyORM.Database;
+using MyORM.ORMException;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,6 +7,11 @@ namespace MyORM.Extension
 {
 	public static class ConnectionStringConverter
 	{
+		/// <summary>
+		/// Convert Config to Connection string for MySQl
+		/// </summary>
+		/// <param name="connectionString"></param>
+		/// <returns></returns>
 		public static string ConvertToMySQL(Dictionary<string, string> connectionString)
 		{
 			if(!connectionString.ContainsKey("Server")||
@@ -25,6 +31,12 @@ namespace MyORM.Extension
 				return connection.ToString();
 			}
 		}
+
+		/// <summary>
+		/// Convert Config to Connection string for SQL
+		/// </summary>
+		/// <param name="connectionString"></param>
+		/// <returns></returns>
 		public static string ConvertToSQL(Dictionary<string, string> connectionString)
 		{
 			if (!connectionString.ContainsKey("Server") ||
@@ -33,6 +45,10 @@ namespace MyORM.Extension
 				!connectionString.ContainsKey("Password"))
 			{
 				throw new ConnectorNotInitializedException();
+			}
+			else if(connectionString.ContainsKey("Port"))
+			{
+				throw new ConnectorNotInitializedException("MSSQL not contrains port!");
 			}
 			else
 			{
@@ -44,6 +60,12 @@ namespace MyORM.Extension
 				return connection.ToString();
 			}
 		}
+
+		/// <summary>
+		/// Convert Config to Connection string for PostgreSQL
+		/// </summary>
+		/// <param name="connectionString"></param>
+		/// <returns></returns>
 		public static string ConvertToPostgreSQL(Dictionary<string, string> connectionString)
 		{
 			if (!connectionString.ContainsKey("Server") ||
@@ -65,5 +87,8 @@ namespace MyORM.Extension
 				return connection.ToString();
 			}
 		}
+
+
+
 	}
 }

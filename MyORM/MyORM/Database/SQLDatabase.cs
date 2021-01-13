@@ -24,9 +24,9 @@ namespace MyORM.Database
         /// Initializes a new instance of the <see cref="SQLDatabase"/> class.
         /// </summary>
         /// <param name="connectionString">connectionString to connect to datase, that user wanna/param>
-        public SQLDatabase(Dictionary<string, string> connectionString)
+        public SQLDatabase(string connectionString)
         {
-            this.ConnectionString = ConnectionStringConverter.ConvertToSQL(connectionString);
+            this.ConnectionString = connectionString;
             this.Initlialize(this.ConnectionString);
         }
 
