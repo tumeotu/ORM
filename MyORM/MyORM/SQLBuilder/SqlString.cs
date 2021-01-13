@@ -8,23 +8,27 @@ using System.Text;
 
 namespace MyORM.SQLBuilder
 {
-    class SqlString<T> : SqlBuilder<T>
+    class SqlString<T> : SqlBuilder<T> where T : class, new()
     {
-        public String sql { get; set; }
-
-        public void save(object ob)
+        public string sql { get; set; }
+        private static IDataMapper dataMapper = null;
+        static SqlString()
         {
-            this.sql = "Inser Into " + DBMapper.getTablename<T>() + "(" + getColumnName<T>() + ") Values (" + getValue(ob) + ")";
+            dataMapper = new DataMapper();
         }
-        public string save(T[] arr)
+        public void Save<T1>(T ob) where T1 : class, new()
+        {
+            this.sql = "Insert Into " + dataMapper.GetTablename<T1>() + "(" + getColumnName<T1>() + ") Values (" + getValues<T1>(ob) + ")";
+        }
+        public string Save<T1>(T[] arr) where T1 : class, new()
         {
             string valueString = "";
             for (int i = 0; i < arr.Length - 1; i++)
             {
-                valueString += "(" + getValue(arr[i]) + "),";
+                valueString += "(" + getValues<T1>(arr[i]) + "),";
             }
-            valueString += "(" + getValue(arr[arr.Length - 1]) + ")";
-            return this.sql = "Inser Into " + DBMapper.getTablename<T>() + "(" + getColumnName<T>() + ") Values " + valueString +";";
+            valueString += "(" + getValues<T1>(arr[arr.Length - 1]) + ")";
+            return this.sql = "Inser Into " + dataMapper.GetTablename<T1>() + "(" + getColumnName<T1>() + ") Values " + valueString + ";";
         }
 
         public SqlBuilder<T> AND(Expression<Func<T, bool>> clause)
@@ -33,7 +37,7 @@ namespace MyORM.SQLBuilder
             return this;
         }
 
-        public SqlBuilder<T> OR(Expression<Func<T, bool>> clause)
+        public SqlBuilder<T> OR(Expression<Func<T, bool>> clause) 
         {
             this.sql += String.Format(" OR ({0})", parseClause(clause.Body));
             return this;
@@ -41,23 +45,28 @@ namespace MyORM.SQLBuilder
 
         public SqlBuilder<T> SelectAll()
         {
-            this.sql = "SELECT * FROM " + DBMapper.getTablename<T>();
+            this.sql = String.Format("SELECT {0} FROM {1} AS {1}", getAllColumnName<T>(), dataMapper.GetTablename<T>());
+            return this;
+        }
+        public SqlBuilder<T> Delete()
+        {
+            this.sql = "DELETE FROM " + dataMapper.GetTablename<T>();
             return this;
         }
 
-        public SqlBuilder<T> Update(T obj)
+        public SqlBuilder<T> Update(T ob) 
         {
-            this.sql = "UPDATE " +DBMapper.getTablename<T>() + " SET ";
-
+            this.sql = "UPDATE " + dataMapper.GetTablename<T>() + " SET ";// lấy danh sách các thuộc tính của đối tượng
             string setString = "";
-            foreach (PropertyInfo prop in obj.GetType().GetProperties())
+            foreach (PropertyInfo prop in ob.GetType().GetProperties())
             {
                 string porpName = prop.Name;
-                var porpValue = prop.GetValue(obj, null);
-                if (porpValue != null)
+                var porpValue = getValueByType(ob, prop);
+                string columnName = dataMapper.GetColumName<T>(porpName);
+                if (columnName != null && porpValue != null && !dataMapper.IsPrimaryKey<T>(porpName))
                 {
-                    setString += DBMapper.getColumName<T>(porpName) + "=";
-                    if (prop.PropertyType == typeof(string))
+                    setString += columnName + "=";
+                    if (prop.PropertyType == typeof(string) || prop.PropertyType == typeof(DateTime))
                     {
                         setString += ("'" + porpValue + "'" + ",");
                     }
@@ -67,6 +76,7 @@ namespace MyORM.SQLBuilder
                     }
                 }
             }
+
             this.sql += setString.Remove(setString.Length - 1);
             return this;
         }
@@ -104,30 +114,9 @@ namespace MyORM.SQLBuilder
             BinaryExpression be = exp as BinaryExpression;
             Expression left = be.Left;
             Expression right = be.Right;
-            object rightValue = null;
             string oprearator = "";
-            if (right is MemberExpression)
-            {
-                MemberExpression member = (MemberExpression)right;
-
-                if (member.Expression is MemberExpression) // right là một property trong object
-                {
-                    MemberExpression captureToProduct = (MemberExpression)member.Expression;
-                    ConstantExpression captureConst = (ConstantExpression)captureToProduct.Expression;
-                    object obj = ((FieldInfo)captureToProduct.Member).GetValue(captureConst.Value);
-                    rightValue = ((PropertyInfo)member.Member).GetValue(obj, null);
-                }
-                else if (member.Expression is ConstantExpression) // right là một biến
-                {
-                    ConstantExpression captureConst = (ConstantExpression)member.Expression;
-                    rightValue = ((FieldInfo)member.Member).GetValue(captureConst.Value);
-                }
-            }
-            else // right là một biến hằng
-            {
-                rightValue = right;
-
-            }
+            ////
+            object rightValue = FactoryGetValue.getStrategy(right).getValue(right);
             //Expression left = eq.Left;
             string leftValue = left.ToString().Split('.')[1];
             Type myType = typeof(T);
@@ -139,7 +128,7 @@ namespace MyORM.SQLBuilder
                     if (myPropInfo.PropertyType == typeof(string))
                     {
                         oprearator = " LIKE ";
-                        rightValue = String.Format("{0}", rightValue);
+
                     }
                     else oprearator = "=";
                     break;
@@ -148,7 +137,6 @@ namespace MyORM.SQLBuilder
                     if (myPropInfo.PropertyType == typeof(string))
                     {
                         oprearator = "NOT LIKE ";
-                        rightValue = String.Format("{0}", rightValue);
                     }
                     else
                         oprearator = "<>";
@@ -166,7 +154,11 @@ namespace MyORM.SQLBuilder
                     oprearator = "<=";
                     break;
             }
-            return String.Format("{0} {1} {2}", DBMapper.getColumName<T>(leftValue), oprearator, rightValue);
+            if (myPropInfo.PropertyType == typeof(string) || myPropInfo.PropertyType == typeof(DateTime))
+            {
+                rightValue = String.Format("'{0}'", rightValue);
+            }
+            return String.Format("{0}.{1} {2} {3}", dataMapper.GetTablename<T>(), dataMapper.GetColumName<T>(leftValue), oprearator, rightValue);
         }
 
         public SqlBuilder<T> GroupBy(Expression<Func<T, object>> clause)
@@ -207,15 +199,19 @@ namespace MyORM.SQLBuilder
         }
 
 
-
-
-
-
-
-
-
-
-
+        private string getAllColumnName<T1>()
+        {
+            string columnNameString = "";
+            string tableName = dataMapper.GetTablename<T1>();
+            foreach (PropertyInfo prop in typeof(T1).GetProperties())
+            {
+                string porpName = prop.Name;
+                string coulumnName = dataMapper.GetColumName<T1>(porpName);
+                if (coulumnName != null)
+                    columnNameString += String.Format("{0}.{1} AS '{0}.{1}',", tableName, coulumnName);
+            }
+            return columnNameString.Remove(columnNameString.Length - 1);
+        }
 
         private string getColumnName<T1>()
         {
@@ -223,30 +219,55 @@ namespace MyORM.SQLBuilder
             foreach (PropertyInfo prop in typeof(T1).GetProperties())
             {
                 string porpName = prop.Name;
-                columnNameString += (DBMapper.getColumName<T>(porpName) + ",");
+                if (!dataMapper.IsPrimaryKey<T1>(porpName) && dataMapper.GetColumName<T1>(porpName) != null)
+                {
+                    dataMapper.GetColumName<T1>(porpName);
+                    columnNameString += (dataMapper.GetColumName<T>(porpName) + ",");
+                }
             }
             return columnNameString.Remove(columnNameString.Length - 1);
         }
-        private string getValue(object ob)
+        private string getValues<T1>(object ob) where T1 : class, new()
         {
             string valueString = "";
             foreach (PropertyInfo prop in typeof(T).GetProperties())
             {
                 string porpName = prop.Name;
-                var porpValue = prop.GetValue(ob, null);
-                if (porpValue != null)
+                if (dataMapper.GetColumName<T1>(porpName) != null)
                 {
-                    if (prop.PropertyType == typeof(string))
+                    var porpValue = getValueByType(ob, prop);
+                    if (porpValue != null)
                     {
-                        valueString += ("'" + porpValue + "'" + ",");
+                        if (!dataMapper.IsPrimaryKey<T1>(porpName))
+                        {
+
+                            if (prop.PropertyType == typeof(string) || prop.PropertyType == typeof(DateTime))
+                            {
+                                valueString += ("'" + porpValue + "'" + ",");
+                            }
+                            else
+                            {
+                                valueString += (porpValue.ToString() + ",");
+                            }
+                        }
                     }
                     else
                     {
-                        valueString += (porpValue.ToString() + ",");
+                        valueString += "null,";
                     }
                 }
             }
             return valueString.Remove(valueString.Length - 1);
+        }
+        private object getValueByType(object ob, PropertyInfo prop)
+        {
+            var porpValue = prop.GetValue(ob, null);
+            if (prop.PropertyType == typeof(DateTime))
+            {
+                DateTime date = (DateTime)porpValue;
+                porpValue = date.ToString("yyyy/MM/dd HH:mm:ss");
+            }
+            return porpValue;
         }
     }
 }

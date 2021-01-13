@@ -12,6 +12,7 @@ namespace MyORM.SQLBuilder
         SqlBuilder<T> OR(Expression<Func<T, bool>> clause);
         SqlBuilder<T> SelectAll();
         SqlBuilder<T> Update(T obj);
+        SqlBuilder<T> Delete();
         SqlBuilder<T> GroupBy(Expression<Func<T, object>> clause1);
         SqlBuilder<T> GroupBy(Expression<Func<T, object>> clause1, Expression<Func<T, object>> clause2);
         SqlBuilder<T> Having<TKey>(Expression<Func<IGroup<TKey, T>, bool>> clause);
