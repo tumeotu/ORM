@@ -6,10 +6,10 @@ using System.Text;
 
 namespace MyORM.SQLBuilder
 {
-    internal class ValueOfVariable : ValueStrategy
+    internal class ValueOfVariable : IValueOf
     {
         private static ValueOfVariable value = null;
-        public static ValueStrategy clone()
+        public static IValueOf clone()
         {
             if (value == null)
             {

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MyORM.SQLBuilder
 {
-    class ValueOfMethod : ValueStrategy
+    class ValueOfMethod : IValueOf
     {
         private static ValueOfMethod value = null;
         public static ValueOfMethod clone()

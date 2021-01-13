@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MyORM.SQLBuilder
 {
-    interface  ValueStrategy
+    interface  IValueOf
     {
          object getValue(Expression expr);
     }

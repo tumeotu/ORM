@@ -5,10 +5,10 @@ using System.Text;
 
 namespace MyORM.SQLBuilder
 {
-    class ValueOfConst : ValueStrategy
+    class ValueOfConst : IValueOf
     {
         private static ValueOfConst value = null;
-        public static ValueStrategy clone()
+        public static IValueOf clone()
         {
             if (value == null)
             {

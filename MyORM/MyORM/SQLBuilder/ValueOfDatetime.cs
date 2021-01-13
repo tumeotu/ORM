@@ -5,10 +5,10 @@ using System.Text;
 
 namespace MyORM.SQLBuilder
 {
-    class ValueOfDatetime : ValueStrategy
+    class ValueOfDatetime : IValueOf
     {
         private static ValueOfDatetime value = null;
-        public static ValueStrategy clone()
+        public static IValueOf clone()
         {
             if (value == null)
             {

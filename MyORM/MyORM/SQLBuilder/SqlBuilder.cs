@@ -5,8 +5,8 @@ using System.Text;
 
 namespace MyORM.SQLBuilder
 {
-	interface SqlBuilder<T>
-	{
+	interface SqlBuilder<T> where T : class, new()
+    {
         SqlBuilder<T> Where(Expression<Func<T, bool>> clause);
         SqlBuilder<T> AND(Expression<Func<T, bool>> clause);
         SqlBuilder<T> OR(Expression<Func<T, bool>> clause);

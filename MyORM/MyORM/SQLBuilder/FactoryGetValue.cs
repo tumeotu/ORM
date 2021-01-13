@@ -7,9 +7,9 @@ namespace MyORM.SQLBuilder
 {
     class FactoryGetValue
     {
-        public static ValueStrategy getStrategy(Expression expr)
+        public static IValueOf getStrategy(Expression expr)
         {
-            ValueStrategy strategy= ValueOfConst.clone();
+            IValueOf strategy= ValueOfConst.clone();
             
             if (expr is MemberExpression)
             {
