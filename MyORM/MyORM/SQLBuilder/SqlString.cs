@@ -28,7 +28,7 @@ namespace MyORM.SQLBuilder
                 valueString += "(" + getValues<T1>(arr[i]) + "),";
             }
             valueString += "(" + getValues<T1>(arr[arr.Length - 1]) + ")";
-            return this.sql = "Inser Into " + dataMapper.GetTablename<T1>() + "(" + getColumnName<T1>() + ") Values " + valueString + ";";
+            return this.sql = "Insert Into " + dataMapper.GetTablename<T1>() + "(" + getColumnName<T1>() + ") Values " + valueString + ";";
         }
 
         public SqlBuilder<T> AND(Expression<Func<T, bool>> clause)
@@ -210,21 +210,6 @@ namespace MyORM.SQLBuilder
             {
                 MemberExpression member = (MemberExpression)right;
 
-<<<<<<< HEAD
-        private string getAllColumnName<T1>()
-        {
-            string columnNameString = "";
-            string tableName = dataMapper.GetTablename<T1>();
-            foreach (PropertyInfo prop in typeof(T1).GetProperties())
-            {
-                string porpName = prop.Name;
-                string coulumnName = dataMapper.GetColumName<T1>(porpName);
-                if (coulumnName != null)
-                    columnNameString += String.Format("{0}.{1} AS '{0}.{1}',", tableName, coulumnName);
-            }
-            return columnNameString.Remove(columnNameString.Length - 1);
-        }
-=======
                 if (member.Expression is MemberExpression) // right là một property trong object
                 {
                     MemberExpression captureToProduct = (MemberExpression)member.Expression;
@@ -284,7 +269,6 @@ namespace MyORM.SQLBuilder
             return String.Format("{0} {1} {2}", DBMapper.getColumName<T>(leftValue), oprearator, rightValue);
         }
 
->>>>>>> 7fdc0ce5bdce83038788f4855cd2eeef2bd505f2
 
         private string getColumnName<T1>()
         {
@@ -341,6 +325,19 @@ namespace MyORM.SQLBuilder
                 porpValue = date.ToString("yyyy/MM/dd HH:mm:ss");
             }
             return porpValue;
+        }
+        private string getAllColumnName<T1>() where T1 : class, new()
+        {
+            string columnNameString = "";
+            string tableName = dataMapper.GetTablename<T1>();
+            foreach (PropertyInfo prop in typeof(T1).GetProperties())
+            {
+                string porpName = prop.Name;
+                string coulumnName = dataMapper.GetColumName<T1>(porpName);
+                if (coulumnName != null)
+                    columnNameString += String.Format("{0}.{1} AS '{0}.{1}',", tableName, coulumnName);
+            }
+            return columnNameString.Remove(columnNameString.Length - 1);
         }
     }
 }
