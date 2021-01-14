@@ -1,4 +1,5 @@
 ﻿using MyORM.Mapper;
+using MyORM.ORMException;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -276,7 +277,15 @@ namespace MyORM.SQLBuilder
             foreach (PropertyInfo prop in typeof(T1).GetProperties())
             {
                 string porpName = prop.Name;
-                if (!dataMapper.IsPrimaryKey<T1>(porpName) && dataMapper.GetColumName<T1>(porpName) != null)
+                if (dataMapper.IsPrimaryKey<T1>(porpName))
+                {
+                    if (isAutoIncrement(porpName))//Tự động tăng
+                    {
+                        dataMapper.GetColumName<T1>(porpName);
+                        columnNameString += (dataMapper.GetColumName<T>(porpName) + ",");
+                    }
+                }
+                else if (dataMapper.GetColumName<T1>(porpName) != null)
                 {
                     dataMapper.GetColumName<T1>(porpName);
                     columnNameString += (dataMapper.GetColumName<T>(porpName) + ",");
@@ -292,25 +301,43 @@ namespace MyORM.SQLBuilder
                 string porpName = prop.Name;
                 if (dataMapper.GetColumName<T1>(porpName) != null)
                 {
+                    bool flag = true;
+                    bool isPrimakey = dataMapper.IsPrimaryKey<T1>(porpName);
                     var porpValue = getValueByType(ob, prop);
-                    if (porpValue != null)
+                    if (isPrimakey)
                     {
-                        if (!dataMapper.IsPrimaryKey<T1>(porpName))
+                        if (isAutoIncrement(porpName) && porpValue == null)
+                            throw new SqlStringException();
+                        else if (isAutoIncrement(porpName) && porpValue != null)
                         {
-
+                            flag = true;
+                        }
+                        else
+                        {
+                            flag = false;
+                        }
+                    }
+                    if (flag)
+                    {
+                        if (porpValue != null)
+                        {
                             if (prop.PropertyType == typeof(string) || prop.PropertyType == typeof(DateTime))
                             {
                                 valueString += ("'" + porpValue + "'" + ",");
+                                if (prop.PropertyType == typeof(string))
+                                {
+
+                                }
                             }
                             else
                             {
                                 valueString += (porpValue.ToString() + ",");
                             }
                         }
-                    }
-                    else
-                    {
-                        valueString += "null,";
+                        else
+                        {
+                            valueString += "null,";
+                        }
                     }
                 }
             }
@@ -338,6 +365,10 @@ namespace MyORM.SQLBuilder
                     columnNameString += String.Format("{0}.{1} AS '{0}.{1}',", tableName, coulumnName);
             }
             return columnNameString.Remove(columnNameString.Length - 1);
+        }
+        private bool isAutoIncrement(string porpName)
+        {
+            return false;
         }
     }
 }
