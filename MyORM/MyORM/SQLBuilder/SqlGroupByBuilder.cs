@@ -25,7 +25,7 @@ namespace MyORM
 
 		public override List<T> Get()
 		{
-			throw new MemberAccessException("The mothod is not support for groupby and having");
+    	this.Database.Read<T>(this.sql);
 		}
 
 		public override Dictionary<TKey, List<T>> GetGroupby<TKey>()
