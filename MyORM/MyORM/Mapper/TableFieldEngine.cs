@@ -10,8 +10,7 @@ namespace MyORM.Mapper
         {
             FlexibleObject<T> targetObject = new FlexibleObject<T>(result);
             string queryColumnName = resultAlias + "." + columnName;
-            //var targetValue = Convert.ChangeType(record[queryColumnName], targetObject.getType(propertyName));
-            var targetValue = record[queryColumnName];
+            var targetValue = record.IsNull(queryColumnName) ? null : record[queryColumnName];
             targetObject.set(propertyName, targetValue);
         }
     }
