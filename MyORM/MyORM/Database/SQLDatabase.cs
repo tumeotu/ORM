@@ -70,7 +70,7 @@ namespace MyORM.Database
 
         public SqlBuilder<T> GetQueryBuilder<T>() where T : class, new()
         {
-            throw new NotImplementedException();
+           return new SqlString<T>(this);
         }
 
         /// <summary>
