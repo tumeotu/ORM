@@ -11,7 +11,7 @@ namespace MyORM.Database.DBHandler
 		/// next handler in chain
 		/// </summary>
 		private IHandlerCheckDB _nextHandler;
-        #endregion
+        #endregion 
 
         #region Method
         /// <summary>
@@ -41,5 +41,6 @@ namespace MyORM.Database.DBHandler
                 return null;
             }
         }
-    }
+		#endregion
+	}
 }

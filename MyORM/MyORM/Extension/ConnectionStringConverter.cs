@@ -8,7 +8,7 @@ namespace MyORM.Extension
 	public static class ConnectionStringConverter
 	{
 		/// <summary>
-		/// Convert Config to Connection string for MySQl
+		/// Convert Config to Connection string for MySQL
 		/// </summary>
 		/// <param name="connectionString"></param>
 		/// <returns></returns>

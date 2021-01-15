@@ -2,7 +2,7 @@
 using MyORM.Mapper;
 using MyORM.ORMException;
 using MyORM.SQLBuilder;
-using MySql.Data.MySqlClient;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,17 +10,17 @@ using System.Text;
 
 namespace MyORM.Database
 {
-
-    class MySQLDatabase : IDatabase
-    {
+	class PostgreSQLDatabase : IDatabase
+	{
 		#region Properties
 		private string ConnectionString;
 
-        private MySqlConnection Connection;
+		private NpgsqlConnection Connection;
 
-        private MySqlCommand Command;
+		private NpgsqlCommand Command;
 
 		private DataMapper DataMapper;
+
 		#endregion
 
 		#region Constructor
@@ -28,7 +28,7 @@ namespace MyORM.Database
 		/// Initializes a new instance of the <see cref="PostgreSQLDatabase"/> class.
 		/// </summary>
 		/// <param name="connectionString">connectionString to connect to datase, that user wanna/param>
-		public MySQLDatabase(string connectionString)
+		public PostgreSQLDatabase(string connectionString)
 		{
 			this.ConnectionString = connectionString;
 			this.Initlialize(this.ConnectionString);
@@ -68,11 +68,9 @@ namespace MyORM.Database
 			this.ConnectionString = "";
 		}
 
-
-
 		public SqlBuilder<T> GetQueryBuilder<T>() where T : class, new()
 		{
-			return new SqlString<T>(this);
+			throw new NotImplementedException();
 		}
 
 		/// <summary>
@@ -82,7 +80,7 @@ namespace MyORM.Database
 		{
 			try
 			{
-				this.Connection = new MySqlConnection(ConnectionString);
+				this.Connection = new NpgsqlConnection(ConnectionString);
 			}
 			catch (Exception exception)
 			{
@@ -116,15 +114,13 @@ namespace MyORM.Database
 		{
 			DataTable data = new DataTable();
 			Connection.Open();
-			Command = new MySqlCommand(queryString, Connection);
-			MySqlDataAdapter da = new MySqlDataAdapter(Command);
+			Command = new NpgsqlCommand(queryString, Connection);
+			NpgsqlDataAdapter da = new NpgsqlDataAdapter(Command);
 			da.Fill(data);
 			List<T> result = DataMapper.loadAll<T>(data) as List<T>;
 			this.Connection.Close();
 			return result;
 		}
-
-
 
 		/// <summary>
 		/// Read data using group by and having from database
@@ -136,13 +132,14 @@ namespace MyORM.Database
 		{
 			DataTable data = new DataTable();
 			Connection.Open();
-			Command = new MySqlCommand(queryString, Connection);
-			MySqlDataAdapter da = new MySqlDataAdapter(Command);
+			Command = new NpgsqlCommand(queryString, Connection);
+			NpgsqlDataAdapter da = new NpgsqlDataAdapter(Command);
 			da.Fill(data);
 			Dictionary<TKey, List<T>> result = DataMapper.loadAll<T>(data) as Dictionary<TKey, List<T>>;
 			this.Connection.Close();
 			return result;
 		}
+
 
 		/// <summary>
 		/// execute query for insert, update, delete
@@ -152,7 +149,7 @@ namespace MyORM.Database
 		public bool Execute(string queryString)
 		{
 			Connection.Open();
-			Command = new MySqlCommand(queryString, Connection);
+			Command = new NpgsqlCommand(queryString, Connection);
 			Command.ExecuteNonQuery();
 			this.Connection.Close();
 			return true;

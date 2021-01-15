@@ -25,8 +25,8 @@ namespace MyORM.Extension
 				}
 				case DatabaseType.MySQL:
 				{
-						string connectionString = ConnectionStringConverter.ConvertToMySQL(config);
-						return new MySQLDatabase(connectionString);
+					string connectionString = ConnectionStringConverter.ConvertToMySQL(config);
+					return new MySQLDatabase(connectionString);
 				}
 				case DatabaseType.MSSQL:
 				{
