@@ -14,5 +14,7 @@ namespace MyORM.Mapper
         string GetTablename<T>() where T : class, new();
 
         bool IsPrimaryKey<T>(string properyName) where T : class, new();
+
+        bool IsPrimaryKeyAutoIncrement<T>(string properyName) where T : class, new();
     }
 }

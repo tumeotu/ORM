@@ -24,7 +24,6 @@ namespace MyORM.Extension
             AbstractHandlerCheckDB PostgreSQL = new PostgreSQLHandlerCheck();
             MSSQL.SetNext(MySQL).SetNext(PostgreSQL);
             var result = MSSQL.Handle(config);
-
             if (result != null)
             {
                 return result;

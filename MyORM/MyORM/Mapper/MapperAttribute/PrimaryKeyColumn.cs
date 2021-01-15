@@ -8,9 +8,16 @@ namespace MyORM.Mapper.MapperAttribute
     public class PrimaryKeyColumn : Attribute
     {
         public string ColumnName;
-        public PrimaryKeyColumn(string columnName)
+        public PrimaryType ColumnType;
+        public PrimaryKeyColumn(string columnName,PrimaryType type= PrimaryType.None)
         {
             this.ColumnName = columnName;
+            this.ColumnType = type;
         }
     }
+    public enum PrimaryType
+	{
+        None,
+        AutoIncrement
+	}
 }

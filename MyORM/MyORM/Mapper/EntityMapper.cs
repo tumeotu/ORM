@@ -11,7 +11,7 @@ namespace MyORM.Mapper
         private string TableName;
         private Dictionary<string, string> databaseToEntity = new Dictionary<string, string>();
         private Dictionary<string, string> entityToDatabase = new Dictionary<string, string>();
-        private HashSet<string> primaryKeyProperty = new HashSet<string>();
+        private Dictionary<string, PrimaryType> primaryKeyProperty = new Dictionary<string, PrimaryType>();
         private List<PropertyMappingRule> rules = new List<PropertyMappingRule>();
         public EntityMapper(Type type)
         {
@@ -57,7 +57,7 @@ namespace MyORM.Mapper
                         if (primaryColumnAttribute != null)
                         {
                             columnOfTable = primaryColumnAttribute.ColumnName;
-                            primaryKeyProperty.Add(propOfEntity);
+                            primaryKeyProperty.Add(propOfEntity, primaryColumnAttribute.ColumnType);
                         }
                     }
                 }
@@ -68,7 +68,9 @@ namespace MyORM.Mapper
                 this.databaseToEntity.Add(columnOfTable, propOfEntity);
                 this.entityToDatabase.Add(propOfEntity, columnOfTable);
                 // TODO: add rule
-                this.rules.Add(new PropertyMappingRule(propOfEntity, columnOfTable, MappingEngine.GetEngineFromName(MappingEngineType.TableField)));
+                this.rules.Add(new PropertyMappingRule(propOfEntity,
+                    columnOfTable, 
+                    MappingEngine.GetEngineFromName(MappingEngineType.TableField)));
             }
         }
 
@@ -101,7 +103,16 @@ namespace MyORM.Mapper
 
         public bool IsPrimaryKey(string propertyName)
         {
-            return this.primaryKeyProperty.Contains(propertyName);
+            return this.primaryKeyProperty.ContainsKey(propertyName);
+        }
+        public bool IsPrimaryKeyAutoIncrement(string propertyName)
+        {
+            if(primaryKeyProperty.ContainsKey(propertyName))
+			{
+                PrimaryType type = primaryKeyProperty[propertyName];
+                return type == PrimaryType.AutoIncrement;
+			}
+            return false;
         }
 
     }

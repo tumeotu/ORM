@@ -4,11 +4,13 @@ using System.Text;
 
 namespace MyORM.SQLBuilder
 {
-	public class IGroup<TKey, Telement>
+	public class IGroup<T>
 	{
-		public TKey Key;
-		public Telement Value;
-
-		public int Count() { return 0; }
+		public T Value;
+		public double Count() { return 0; }
+		public double AVG(object clause) { return 0; }
+		public double MIN(object clause) { return 0; }
+		public double MAX(object clause) { return 0; }
+		public double SUM(object clause) { return 0; }
 	}
 }
