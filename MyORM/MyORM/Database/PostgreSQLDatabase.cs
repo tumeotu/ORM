@@ -117,7 +117,7 @@ namespace MyORM.Database
 			Command = new NpgsqlCommand(queryString, Connection);
 			NpgsqlDataAdapter da = new NpgsqlDataAdapter(Command);
 			da.Fill(data);
-			List<T> result = DataMapper.loadAll<T>(data) as List<T>;
+			List<T> result = DataMapper.loadAll<T>(data);
 			this.Connection.Close();
 			return result;
 		}
@@ -135,8 +135,8 @@ namespace MyORM.Database
 			Command = new NpgsqlCommand(queryString, Connection);
 			NpgsqlDataAdapter da = new NpgsqlDataAdapter(Command);
 			da.Fill(data);
-			Dictionary<TKey, List<T>> result = DataMapper.loadAll<T>(data) as Dictionary<TKey, List<T>>;
-			this.Connection.Close();
+            Dictionary<TKey, List<T>> result = DataMapper.loadDictionary<TKey, T>(data);
+            this.Connection.Close();
 			return result;
 		}
 

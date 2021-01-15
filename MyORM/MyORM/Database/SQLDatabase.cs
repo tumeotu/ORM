@@ -68,15 +68,15 @@ namespace MyORM.Database
             this.ConnectionString = "";
         }
 
-		public SqlBuilder<T> GetQueryBuilder<T>() where T : class, new()
-		{
-			throw new NotImplementedException();
-		}
+        public SqlBuilder<T> GetQueryBuilder<T>() where T : class, new()
+        {
+            throw new NotImplementedException();
+        }
 
-		/// <summary>
-		/// Initializes the connection against the database.
-		/// </summary>
-		public void Initlialize(string ConnectionString)
+        /// <summary>
+        /// Initializes the connection against the database.
+        /// </summary>
+        public void Initlialize(string ConnectionString)
         {
             try
             {
@@ -123,7 +123,7 @@ namespace MyORM.Database
             Command = new SqlCommand(queryString, Connection);
             SqlDataAdapter da = new SqlDataAdapter(Command);
             da.Fill(data);
-            List<T> result = DataMapper.loadAll<T>(data) as List<T>;
+            List<T> result = DataMapper.loadAll<T>(data);
             this.Connection.Close();
             return result;
         }
@@ -142,8 +142,7 @@ namespace MyORM.Database
             Command = new SqlCommand(queryString, Connection);
             SqlDataAdapter da = new SqlDataAdapter(Command);
             da.Fill(data);
-            Dictionary<TKey, List<T>> result = DataMapper.loadAll<T>(data) as Dictionary<TKey, List<T>>;
-            this.Connection.Close();
+            Dictionary<TKey, List<T>> result = DataMapper.loadDictionary<TKey, T>(data);
             return result;
         }
 
