@@ -23,7 +23,6 @@ namespace MyORM.ORMException
         /// <param name="message">The message that describes the error.</param>
         public ConnectorNotInitializedException(string message) : base(message)
         {
-
         }
         /// <summary>
         /// Initializes a new instance of the <see cref="ConnectorNotInitializedException"/> class.

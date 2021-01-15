@@ -1,4 +1,5 @@
-﻿using MyORM.ORMException;
+﻿using MyORM.Extension;
+using MyORM.ORMException;
 using Npgsql;
 using System;
 using System.Collections.Generic;

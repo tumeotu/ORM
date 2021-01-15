@@ -1,19 +1,22 @@
 ﻿using MyORM.Mapper;
 using Npgsql;
+﻿using MyORM.Extension;
+using MyORM.SQLBuilder;
 using System;
 using System.Collections.Generic;
 using System.Data;
 
-namespace MyORM
+namespace abc
 {
     public class Class1
     {
         static void Main(string[] args)
         {
-            //SinhVien sinhVien = new SinhVien();
-            //sinhVien.name = "sdsd";
-            //sinhVien.DTB = 305;
-            //SqlString<SinhVien> sqlString = new SqlString<SinhVien>();
+
+            SinhVien sinhVien = new SinhVien();
+            sinhVien.name = "sdsd";
+            sinhVien.DTB = 305;
+            SqlString<SinhVien> sqlString = new SqlString<SinhVien>();
 
             //sqlString.Update(sinhVien).Where(sv => sv.name == "sff");
             //Console.WriteLine(sqlString.sql);
