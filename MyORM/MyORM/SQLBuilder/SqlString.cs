@@ -38,7 +38,7 @@ namespace MyORM.SQLBuilder
             return this;
         }
 
-        public SqlBuilder<T> OR(Expression<Func<T, bool>> clause) 
+        public SqlBuilder<T> OR(Expression<Func<T, bool>> clause)
         {
             this.sql += String.Format(" OR ({0})", parseClause(clause.Body));
             return this;
@@ -55,7 +55,7 @@ namespace MyORM.SQLBuilder
             return this;
         }
 
-        public SqlBuilder<T> Update(T ob) 
+        public SqlBuilder<T> Update(T ob)
         {
             this.sql = "UPDATE " + dataMapper.GetTablename<T>() + " SET ";// lấy danh sách các thuộc tính của đối tượng
             string setString = "";
@@ -271,7 +271,7 @@ namespace MyORM.SQLBuilder
         }
 
 
-        private string getColumnName<T1>()
+        private string getColumnName<T1>() where T1 : class, new()
         {
             string columnNameString = "";
             foreach (PropertyInfo prop in typeof(T1).GetProperties())

@@ -27,7 +27,7 @@ namespace MyORM.Database
 		/// </summary>
 		/// <param name="queryString">string of query into database</param>
 		/// <returns> DataTable of results </returns>
-		object Read(string queryString);
+		DataTable Read(string queryString);
 
 		/// <summary>
 		/// release object connection

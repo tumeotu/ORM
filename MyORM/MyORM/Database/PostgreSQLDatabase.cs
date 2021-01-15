@@ -24,7 +24,7 @@ namespace MyORM.Database
         public PostgreSQLDatabase(string connectionString)
         {
             this.ConnectionString = connectionString;
-            this.Initlialize();
+            this.Initlialize(connectionString);
         }
 
         #endregion
@@ -53,7 +53,7 @@ namespace MyORM.Database
             this.ConnectionString = "";
         }
 
-        public void Initlialize()
+        public void Initlialize(string connectionString)
         {
             try
             {
