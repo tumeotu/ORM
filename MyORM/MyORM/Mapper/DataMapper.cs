@@ -12,7 +12,7 @@ namespace MyORM.Mapper
         private static Dictionary<Type, EntityMapper> entities = new Dictionary<Type, EntityMapper>();
         static DataMapper()
         {
-            Assembly assembly = Assembly.GetExecutingAssembly();
+            Assembly assembly = Assembly.GetEntryAssembly();
             foreach (var type in assembly.GetTypes())
             {
                 if (!type.IsClass || !type.IsDefined(typeof(TableAttribute), false))
@@ -25,9 +25,8 @@ namespace MyORM.Mapper
         public List<T> loadAll<T>(DataTable dataTable) where T : class, new()
         {
             List<T> result = new List<T>();
-            //EntityMapper entityMapper = null;
-            EntityMapper entityMapper = entities[typeof(T)];
-            if (!GetMapper(typeof(T), entityMapper))
+            EntityMapper entityMapper = null;
+            if (!GetMapper(typeof(T), out entityMapper))
             {
                 return result;
             }
@@ -52,7 +51,7 @@ namespace MyORM.Mapper
         public string GetColumName<T>(string entityPropertyName) where T : class, new()
         {
             EntityMapper entityMapper = null;
-            if (!GetMapper(typeof(T), entityMapper))
+            if (!GetMapper(typeof(T), out entityMapper))
             {
                 return null;
             }
@@ -62,7 +61,7 @@ namespace MyORM.Mapper
         public string GetTablename<T>() where T : class, new()
         {
             EntityMapper entityMapper = null;
-            if (!GetMapper(typeof(T), entityMapper))
+            if (!GetMapper(typeof(T), out entityMapper))
             {
                 return null;
             }
@@ -72,13 +71,13 @@ namespace MyORM.Mapper
         public bool IsPrimaryKey<T>(string properyName) where T : class, new()
         {
             EntityMapper entityMapper = null;
-            if (GetMapper(typeof(T), entityMapper))
+            if (GetMapper(typeof(T), out entityMapper))
             {
                 return (entityMapper.IsPrimaryKey(properyName));
             }
             return false;
         }
-        public bool GetMapper(Type type, EntityMapper entityMapper)
+        public bool GetMapper(Type type, out EntityMapper entityMapper)
         {
             if (!entities.TryGetValue(type, out entityMapper))
             {
