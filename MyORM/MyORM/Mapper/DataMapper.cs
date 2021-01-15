@@ -119,5 +119,10 @@ namespace MyORM.Mapper
             }
             return true;
         }
+
+        public bool IsPrimaryKeyAutoIncrement<T>(string properyName) where T : class, new()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

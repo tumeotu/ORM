@@ -8,6 +8,7 @@ namespace MyORM.Mapper
     interface IDataMapper
     {
         List<T> loadAll<T>(DataTable dataTable) where T : class, new();
+        Dictionary<TKey, List<T>> loadDictionary<TKey, T>(DataTable dataTable) where T : class, new();
         T loadOne<T>(DataTable dataTable) where T : class, new();
 
         string GetColumName<T>(string propertyName) where T : class, new();
