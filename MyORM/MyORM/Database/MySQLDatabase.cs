@@ -139,7 +139,7 @@ namespace MyORM.Database
             Command = new MySqlCommand(queryString, Connection);
             MySqlDataAdapter da = new MySqlDataAdapter(Command);
             da.Fill(data);
-            Dictionary<TKey, List<T>> result = DataMapper.loadDictionary<TKey, T>(data)
+            Dictionary<TKey, List<T>> result = DataMapper.loadDictionary<TKey, T>(data);
             this.Connection.Close();
             return result;
         }
