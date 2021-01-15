@@ -1,4 +1,5 @@
-﻿using MyORM.SQLBuilder;
+﻿using MyORM.Database;
+using MyORM.SQLBuilder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,9 +19,10 @@ namespace MyORM
         /// constructor
         /// </summary>
         /// <param name="sql"></param>
-        public SqlGroupByBuilder(string sql)
+        public SqlGroupByBuilder(string sql, IDatabase database)
         {
             this.sql = sql;
+            Database = database;
         }
 
         public override List<T> Get()
