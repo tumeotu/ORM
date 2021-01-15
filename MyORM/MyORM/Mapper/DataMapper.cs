@@ -42,6 +42,40 @@ namespace MyORM.Mapper
             return result;
         }
 
+        public Dictionary<TKey, List<T>> loadDictionary<TKey, T>(DataTable dataTable) where T : class, new()
+        {
+            Dictionary<TKey, List<T>> result = new Dictionary<TKey, List<T>>();
+            EntityMapper entityMapper = null;
+            if (!GetMapper(typeof(T), out entityMapper))
+            {
+                return result;
+            }
+
+            foreach (DataRow record in dataTable.Rows)
+            {
+                if (record.IsNull("key"))
+                {
+                    continue;
+                }
+                T entity = entityMapper.map<T>(record);
+                TKey keyValue = (TKey)record["key"];
+                if (entity != null)
+                {
+                    if (!result.ContainsKey(keyValue))
+                    {
+                        List<T> list = new List<T>();
+                        list.Add(entity);
+                        result.Add(keyValue, list);
+                    }
+                    else
+                    {
+                        result[keyValue].Add(entity);
+                    }
+                }
+            }
+            return result;
+        }
+
         public T loadOne<T>(DataTable dataTable) where T : class, new()
         {
             // TODO
