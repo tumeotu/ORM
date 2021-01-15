@@ -272,7 +272,7 @@ namespace MyORM.SQLBuilder
                 string porpName = prop.Name;
                 string coulumnName = dataMapper.GetColumName<T1>(porpName);
                 if (coulumnName != null)
-                    columnNameString += String.Format("{0}.{1} AS '{0}.{1}',", tableName, coulumnName);
+                    columnNameString += String.Format("{0}.{1} AS \"{0}.{1}\",", tableName, coulumnName);
             }
             return columnNameString.Remove(columnNameString.Length - 1);
         }
@@ -286,16 +286,16 @@ namespace MyORM.SQLBuilder
         {
             string group = parseClauseGroupBy(clause.Body.ToString());
             //string select = GetAllColumnToSelect(typeof(T));
-            string sql = "SELECT {0} " +
-                         "FROM {1} as {1} " +
+            string sql = "SELECT {0}, {2} as \"key\" " +
+                         "FROM {1} as \"{1}\" " +
                          "where {2} in (" +
-                         "select {2}" +
-                         "from {1} " +
-                         "group by {2}" +
-                         ")" +
+                         "select {2} " +
+                         " from {1} " +
+                         " group by {2}" +
+                         ") " +
                          "order by {2} asc";
             this.sql = String.Format(sql, getAllColumnName<T>(), dataMapper.GetTablename<T>(), group);
-            return new SqlGroupByBuilder<T, T>(this.sql);
+            return new SqlGroupByBuilder<T, T>(this.sql, this.Database);
         }
 
         private static string parseClauseGroupBy(string clause)
@@ -313,7 +313,7 @@ namespace MyORM.SQLBuilder
             int index = this.sql.IndexOf(")");
             string having = " Having " + parseClauseHaving(clause.Body);
             this.sql = this.sql.Insert(index, having);
-            return new SqlGroupByBuilder<T, T>(this.sql);
+            return new SqlGroupByBuilder<T, T>(this.sql, this.Database);
         }
 
         private static string parseClauseHaving(Expression expr)
