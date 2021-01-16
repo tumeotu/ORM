@@ -189,7 +189,7 @@ namespace MyORM.SQLBuilder
                 string porpName = prop.Name;
                 if (dataMapper.IsPrimaryKey<T>(porpName))
                 {
-                    if (!this.isAutoIncrement(porpName))//Tự động tăng
+                    if (!isAutoIncrement(porpName))//Tự động tăng
                     {
                         dataMapper.GetColumName<T>(porpName);
                         columnNameString += (dataMapper.GetColumName<T>(porpName) + ",");
@@ -272,7 +272,7 @@ namespace MyORM.SQLBuilder
                 string porpName = prop.Name;
                 string coulumnName = dataMapper.GetColumName<T1>(porpName);
                 if (coulumnName != null)
-                    columnNameString += String.Format("{0}.{1} AS \"{0}.{1}\",", tableName, coulumnName);
+                    columnNameString += String.Format("{0}.{1} AS '{0}.{1}',", tableName, coulumnName);
             }
             return columnNameString.Remove(columnNameString.Length - 1);
         }
@@ -286,12 +286,12 @@ namespace MyORM.SQLBuilder
         {
             string group = parseClauseGroupBy(clause.Body.ToString());
             //string select = GetAllColumnToSelect(typeof(T));
-            string sql = "SELECT {0}, {2} as \"key\" " +
-                         "FROM {1} as \"{1}\" " +
+            string sql = "SELECT {0}, {1}.{2} as \'key\' " +
+                         "FROM {1} as {1} " +
                          "where {2} in (" +
                          "select {2} " +
-                         " from {1} " +
-                         " group by {2}" +
+                         "from {1} " +
+                         "group by {2}" +
                          ") " +
                          "order by {2} asc";
             this.sql = String.Format(sql, getAllColumnName<T>(), dataMapper.GetTablename<T>(), group);
@@ -363,6 +363,12 @@ namespace MyORM.SQLBuilder
                 index = leftValue.IndexOf('(');
                 int index2 = leftValue.LastIndexOf(".");
                 leftValue = leftValue.Remove(index + 1, index2 - index);
+                index = leftValue.IndexOf(')');
+                leftValue = leftValue.Remove(index + 1, 1);
+            }
+            if (leftValue.Contains("Count()"))
+            {
+                leftValue = "COUNT(*)";
             }
 
             Type myType = typeof(T);
@@ -370,13 +376,7 @@ namespace MyORM.SQLBuilder
             switch (be.NodeType)
             {
                 case ExpressionType.Equal:
-
-                    if (myPropInfo.PropertyType == typeof(string))
-                    {
-                        oprearator = " LIKE ";
-                        rightValue = String.Format("{0}", rightValue);
-                    }
-                    else oprearator = "=";
+                    oprearator = "=";
                     break;
                 case ExpressionType.NotEqual:
                     if (myPropInfo.PropertyType == typeof(string))
@@ -400,109 +400,19 @@ namespace MyORM.SQLBuilder
                     oprearator = "<=";
                     break;
             }
-            return String.Format("{0} {1} {2}", dataMapper.GetColumName<T>(leftValue), oprearator, rightValue);
-        }
 
-
-        private string getColumnName<T1>() where T1 : class, new()
-        {
-            string columnNameString = "";
-            foreach (PropertyInfo prop in typeof(T1).GetProperties())
+            try
             {
-                string porpName = prop.Name;
-                if (dataMapper.IsPrimaryKey<T1>(porpName))
-                {
-                    if (isAutoIncrement(porpName))//Tự động tăng
-                    {
-                        dataMapper.GetColumName<T1>(porpName);
-                        columnNameString += (dataMapper.GetColumName<T>(porpName) + ",");
-                    }
-                }
-                else if (dataMapper.GetColumName<T1>(porpName) != null)
-                {
-                    dataMapper.GetColumName<T1>(porpName);
-                    columnNameString += (dataMapper.GetColumName<T>(porpName) + ",");
-                }
+                char[] separators = new char[] { '(', ')', ' ', };
+                string[] subs = leftValue.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+                string value = dataMapper.GetColumName<T>(subs[1]);
+                return String.Format("{0} {1} {2}", subs[0] + "(" + value + ")", oprearator, rightValue);
             }
-            return columnNameString.Remove(columnNameString.Length - 1);
+            catch
+            {
+                return String.Format("{0} {1} {2}", leftValue, oprearator, rightValue);
+            }
         }
-        //private string getValues<T1>(object ob) where T1 : class, new()
-        //{
-        //    string valueString = "";
-        //    foreach (PropertyInfo prop in typeof(T).GetProperties())
-        //    {
-        //        string porpName = prop.Name;
-        //        if (dataMapper.GetColumName<T1>(porpName) != null)
-        //        {
-        //            bool flag = true;
-        //            bool isPrimakey = dataMapper.IsPrimaryKey<T1>(porpName);
-        //            var porpValue = getValueByType(ob, prop);
-        //            if (isPrimakey)
-        //            {
-        //                if (isAutoIncrement(porpName) && porpValue == null)
-        //                    throw new SqlStringException();
-        //                else if (isAutoIncrement(porpName) && porpValue != null)
-        //                {
-        //                    flag = true;
-        //                }
-        //                else
-        //                {
-        //                    flag = false;
-        //                }
-        //            }
-        //            if (flag)
-        //            {
-        //                if (porpValue != null)
-        //                {
-        //                    if (prop.PropertyType == typeof(string) || prop.PropertyType == typeof(DateTime))
-        //                    {
-        //                        valueString += ("'" + porpValue + "'" + ",");
-        //                        if (prop.PropertyType == typeof(string))
-        //                        {
-
-        //                        }
-        //                    }
-        //                    else
-        //                    {
-        //                        valueString += (porpValue.ToString() + ",");
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    valueString += "null,";
-        //                }
-        //            }
-        //        }
-        //    }
-        //    return valueString.Remove(valueString.Length - 1);
-        //}
-        //private object getValueByType(object ob, PropertyInfo prop)
-        //{
-        //    var porpValue = prop.GetValue(ob, null);
-        //    if (prop.PropertyType == typeof(DateTime))
-        //    {
-        //        DateTime date = (DateTime)porpValue;
-        //        porpValue = date.ToString("yyyy/MM/dd HH:mm:ss");
-        //    }
-        //    return porpValue;
-        //}
-        //private string getAllColumnName<T1>() where T1 : class, new()
-        //{
-        //    string columnNameString = "";
-        //    string tableName = dataMapper.GetTablename<T1>();
-        //    foreach (PropertyInfo prop in typeof(T1).GetProperties())
-        //    {
-        //        string porpName = prop.Name;
-        //        string coulumnName = dataMapper.GetColumName<T1>(porpName);
-        //        if (coulumnName != null)
-        //            columnNameString += String.Format("{0}.{1} AS '{0}.{1}',", tableName, coulumnName);
-        //    }
-        //    return columnNameString.Remove(columnNameString.Length - 1);
-        //}
-        //private bool isAutoIncrement(string porpName)
-        //{
-        //    return false;
-        //}
 
         public virtual List<T> Get()
         {
