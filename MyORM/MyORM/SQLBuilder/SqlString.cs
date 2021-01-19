@@ -61,7 +61,7 @@ namespace MyORM.SQLBuilder
 
         public SqlBuilder<T> SelectAll()
         {
-            this.sql = String.Format("SELECT {0} FROM {1} AS {1}", getAllColumnName<T>(), dataMapper.GetTablename<T>());
+            this.sql = String.Format("SELECT {0} FROM {1} AS {1}", getAllColumnName(), dataMapper.GetTablename<T>());
             return this;
         }
         public SqlBuilder<T> Delete()
@@ -87,13 +87,17 @@ namespace MyORM.SQLBuilder
                 if (columnName != null)
                 {
                     setString += columnName + "=";
-                    if (prop.PropertyType == typeof(string) || prop.PropertyType == typeof(DateTime))
+                    if (prop.PropertyType == typeof(string))
+                    {
+                        setString += ("N'" + porpValue + "'" + ",");
+                    }
+                    else if (prop.PropertyType == typeof(DateTime))
                     {
                         setString += ("'" + porpValue + "'" + ",");
                     }
                     else
                     {
-                        setString += (porpValue.ToString() + ",");
+                        setString += (porpValue == null ? "null" : porpValue.ToString()) + ",";
                     }
                 }
             }
@@ -233,10 +237,18 @@ namespace MyORM.SQLBuilder
                         {
                             if (prop.PropertyType == typeof(string) || prop.PropertyType == typeof(DateTime))
                             {
-                                valueString += ("'" + porpValue + "'" + ",");
                                 if (prop.PropertyType == typeof(string))
                                 {
 
+                                    valueString += ("N'" + porpValue + "'" + ",");
+                                }
+                                else if (prop.PropertyType == typeof(DateTime))
+                                {
+                                    valueString += ("'" + porpValue + "'" + ",");
+                                }
+                                else
+                                {
+                                    valueString += (porpValue.ToString() + ",");
                                 }
                             }
                             else
@@ -263,14 +275,14 @@ namespace MyORM.SQLBuilder
             }
             return porpValue;
         }
-        private string getAllColumnName<T1>() where T1 : class, new()
+        private string getAllColumnName()
         {
             string columnNameString = "";
-            string tableName = dataMapper.GetTablename<T1>();
-            foreach (PropertyInfo prop in typeof(T1).GetProperties())
+            string tableName = dataMapper.GetTablename<T>();
+            foreach (PropertyInfo prop in typeof(T).GetProperties())
             {
                 string porpName = prop.Name;
-                string coulumnName = dataMapper.GetColumName<T1>(porpName);
+                string coulumnName = dataMapper.GetColumName<T>(porpName);
                 if (coulumnName != null)
                     columnNameString += String.Format("{0}.{1} AS '{0}.{1}',", tableName, coulumnName);
             }
@@ -294,7 +306,7 @@ namespace MyORM.SQLBuilder
                          "group by {2}" +
                          ") " +
                          "order by {2} asc";
-            this.sql = String.Format(sql, getAllColumnName<T>(), dataMapper.GetTablename<T>(), group);
+            this.sql = String.Format(sql, getAllColumnName(), dataMapper.GetTablename<T>(), group);
             return new SqlGroupByBuilder<T, T>(this.sql, this.Database);
         }
 

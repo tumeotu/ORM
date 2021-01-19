@@ -32,6 +32,10 @@ namespace MyORM.SQLBuilder
             {
                 strategy = ValueOfMethod.clone();
             }
+            else if (expr is UnaryExpression)
+            {
+                strategy = ValueOfUnary.clone();
+            }
             return strategy;
         }
     }
